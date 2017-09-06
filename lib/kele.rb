@@ -68,8 +68,21 @@ class Kele
             assignment_commit_link: assignment_commit_link,
             comment: comment
         })
+        @submission_id = response.body["id"]
     end
     
+    
+    def update_submission(checkpoint_id, assignment_branch, assignment_commit_link, comment)
+        response = self.class.get(get_api_url('checkpoint_submissions/:id'), headers: { "authorization" => @auth_token },
+        query: {
+            id: @submission_id,
+            enrollment_id: @enrollment_id,
+            checkpoint_id: checkpoint_id,
+            assignment_branch: assignment_branch,
+            assignment_commit_link: assignment_commit_link,
+            comment: comment
+        })
+    end
     
     def get_api_url(endpoint)
         "https://www.bloc.io/api/v1/#{endpoint}"
