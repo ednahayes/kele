@@ -24,7 +24,8 @@ class Kele
     
     def get_me
         response = self.class.get(get_api_url('users/me'), headers: { "authorization" => @auth_token })
-        @user_data = JSON.parse(response.body)  
+        @user_data = JSON.parse(response.body)
+        @enrollment_id = @user_data['current_enrollment']['id']
     end   
     
     def get_mentor_availability(mentor_id)
@@ -58,7 +59,17 @@ class Kele
         
     end
 
-
+    def create_submission(checkpoint_id, assignment_branch, assignment_commit_link, comment )
+        response = self.class.get(get_api_url('checkpoint_submissions'), headers: { "authorization" => @auth_token },
+        query: {
+            enrollment_id: @enrollment_id,
+            checkpoint_id: checkpoint_id,
+            assignment_branch: assignment_branch,
+            assignment_commit_link: assignment_commit_link,
+            comment: comment
+        })
+    end
+    
     
     def get_api_url(endpoint)
         "https://www.bloc.io/api/v1/#{endpoint}"
